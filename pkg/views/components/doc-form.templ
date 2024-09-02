@@ -1,0 +1,72 @@
+package components
+
+templ DocsForm() {
+	<div class="flex flex-col justify-center items-center w-full max-w-screen-md">
+		<div class="bg-base-100 shadow-2xl w-full">
+			<form hx-post="/api/document" hx-target="#dashboard">
+				<div class="form-control">
+					<label for="code" class="label">
+						<span class="label-text lg:text-xl">No. Dokumen</span>
+					</label>
+					<input
+						id="code"
+						type="text"
+						name="code"
+						placeholder="No. Dokumen"
+						class="input input-bordered lg:text-xl"
+						required
+					/>
+				</div>
+				<div class="form-control">
+					<label for="title" class="label">
+						<span class="label-text lg:text-xl">Nama Dokumen</span>
+					</label>
+					<input id="title" type="text" name="title" placeholder="Nama Dokumen" class="input input-bordered lg:text-xl" required/>
+				</div>
+				<div class="form-control">
+					<label for="tags" class="label">
+						<span class="label-text lg:text-xl">Tags</span>
+					</label>
+					<input id="tags" type="text" name="tags" placeholder="Tags" class="input input-bordered lg:text-xl"/>
+				</div>
+				<div class="form-control">
+					<label for="description" class="label">
+						<span class="label-text lg:text-xl">Description</span>
+					</label>
+					<textarea name="description" id="description" placeholder="Description" class="textarea textarea-bordered lg:text-xl"></textarea>
+				</div>
+				<div class="form-control">
+					<label for="issued_at" class="label">
+						<span class="label-text lg:text-xl">Tanggal Pembuatan Dokumen</span>
+					</label>
+					<input id="issued_at" type="date" name="issued_at" placeholder="Tanggal Pembuatan Dokumen" class="input input-bordered lg:text-xl" required/>
+				</div>
+				<div class="form-control">
+					<label for="due_date" class="label">
+						<span class="label-text lg:text-xl">Tanggal Kadaluarsa Dokumen</span>
+					</label>
+					<input id="due_date" type="date" name="due_date" placeholder="Tanggal Kadaluarsa Dokumen" class="input input-bordered lg:text-xl"/>
+				</div>
+				<div class="form-control mt-6">
+					<button class="btn btn-primary lg:text-xl">Submit</button>
+				</div>
+				<div class="form-control mt-6">
+					<a hx-get="/dashboard" hx-target="#dashboard" hx-swap="innerHTML" class="btn btn-error lg:text-xl">Cancel</a>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script type="text/javascript">
+		document.addEventListener('DOMContentLoaded', () => {
+        document.body.addEventListener('htmx:beforeSwap', function (evt) {
+          if (evt.detail.xhr.status >= 400 && evt.detail.xhr.status <= 500) {
+						evt.detail.target = document.getElementById('notification')
+            evt.detail.shouldSwap = true;
+            evt.detail.isError = false;
+          } else if (evt.detail.requestConfig.path === '/dashboard') {
+						evt.detail.target = document.getElementById('dashboard');
+					}
+        });
+      });
+	</script>
+}

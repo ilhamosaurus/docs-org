@@ -1,0 +1,60 @@
+package components
+
+script HandleError() {
+	document.addEventListener('DOMContentLoaded', (event) => {
+        document.body.addEventListener('htmx:beforeSwap', function (evt) {
+          if (evt.detail.xhr.status >= 400 && evt.detail.xhr.status < 500) {
+            evt.detail.shouldSwap = true;
+            evt.detail.isError = false;
+          }
+        });
+      });
+}
+
+templ LoginForm() {
+	<div class="hero bg-base-200 min-h-[80vh] w-full md:w-[60vw]">
+		<div class="hero-content flex-col lg:flex-row-reverse">
+			<div class="text-center lg:text-left">
+				<h1 class="text-5xl font-bold">Login now!</h1>
+				<p class="py-6">
+					Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veritatis, ipsum ullam praesentium repudiandae officiis tenetur culpa molestiae quis repellendus unde ipsa ea aut voluptates. Est corrupti eaque maxime deserunt ad eligendi, quia eum quaerat nam, ex enim excepturi nemo libero vitae, dolore eos autem! Totam quod iusto dolor corporis alias!
+				</p>
+			</div>
+			<div class="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
+				<form class="card-body" hx-post="/api/login">
+					<div class="form-control">
+						<label class="label" for="email">
+							<span class="label-text lg:text-xl">Email</span>
+						</label>
+						<input type="email" name="email" placeholder="email" class="input input-bordered lg:text-xl" required/>
+					</div>
+					<div class="form-control">
+						<label class="label" for="password">
+							<span class="label-text lg:text-xl">Password</span>
+						</label>
+						<input type="password" name="password" placeholder="password" class="input input-bordered lg:text-xl" required/>
+						<a hx-get="/register" hx-target="#login-register-form" class="label-text-alt link link-hover lg:text-xl">Don't have an account? Register here!</a>
+					</div>
+					<div class="form-control mt-6">
+						<button class="btn btn-primary lg:text-xl">Login</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		document.addEventListener('DOMContentLoaded', () => {
+        document.body.addEventListener('htmx:beforeSwap', function (evt) {
+          if (evt.detail.xhr.status >= 400 && evt.detail.xhr.status <= 500) {
+						evt.detail.target = document.getElementById('notification')
+            evt.detail.shouldSwap = true;
+            evt.detail.isError = false;
+          } else if (evt.detail.requestConfig.path === '/register' || evt.detail.requestConfig.path === '/login') {
+						evt.detail.target = document.getElementById('login-register-form');
+					} else {
+						evt.detail.target = document.getElementById('index')
+					}
+        });
+      });
+	</script>
+}

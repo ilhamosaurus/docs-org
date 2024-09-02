@@ -1,0 +1,33 @@
+package components
+
+import "fmt"
+
+type ToastProps struct {
+	Error   interface{} `json:"error"`
+	Message *string     `json:"message"`
+}
+
+templ Toast(props *ToastProps) {
+	<div id="notification" class="toast toast-top toast-center">
+		if props.Error != nil {
+			<div class="alert alert-error">
+				switch err := props.Error.(type) {
+					case string:
+						<span>{ err }</span>
+					case error:
+						<span>{ props.Error.(error).Error() }</span>
+					case []string:
+						for _, e := range props.Error.([]string) {
+							<span>{ e }</span>
+						}
+					default:
+						<span>{ fmt.Sprintf("%v", props.Error) }</span>
+				}
+			</div>
+		} else if props.Message != nil {
+			<div class="alert alert-success">
+				<span>{ *props.Message }</span>
+			</div>
+		}
+	</div>
+}

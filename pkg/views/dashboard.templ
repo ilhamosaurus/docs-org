@@ -1,0 +1,39 @@
+package views
+
+import (
+	"go-templ/infra/models"
+	"go-templ/pkg/views/components"
+)
+
+templ Dashboard(result models.GetDocumentResponse, props *components.ToastProps) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="UTF-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+			<script src="/static/js/htmx.min.js"></script>
+			<link rel="stylesheet" href="/static/css/styles.css"/>
+			<link rel="preconnect" href="https://fonts.googleapis.com"/>
+			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+			<link href="https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap" rel="stylesheet"/>
+			<title>Dashboard</title>
+		</head>
+		<body data-theme="forest" id="dashboard">
+			@components.Navbar()
+			@components.Toast(props)
+			<div id="main-content" class="flex flex-col w-full justify-center items-center">
+				<div class="skeleton w-full h-12 bg-inherit"></div>
+				<br/>
+				<!-- Flex container for the button and search input -->
+				<div class="form-control flex flex-row justify-start items-center w-full px-4">
+					<!-- "Tambah Dokumen" button -->
+					<button hx-get="/document" hx-target="#table-container" hx-swap="outerHTML" class="m-4 btn btn-outline btn-info">Tambah Dokumen</button>
+					<!-- Search input -->
+					<input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto"/>
+				</div>
+				<div class="skeleton w-full h-12 bg-inherit"></div>
+				@components.Table(result.Data)
+			</div>
+		</body>
+	</html>
+}
