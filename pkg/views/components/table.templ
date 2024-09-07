@@ -1,26 +1,6 @@
 package components
 
-import (
-	"fmt"
-	"go-templ/infra/models"
-	"time"
-)
-
-func DocumentsColor(docs models.Document) string {
-	if docs.DueDate == nil {
-		return "inherit"
-	}
-	period := docs.DueDate.Sub(time.Now())
-
-	switch {
-	case period.Abs().Hours() <= 24*30:
-		return "error"
-	case period.Abs().Hours() <= 24*90:
-		return "warning"
-	default:
-		return "inherit"
-	}
-}
+import "go-templ/infra/models"
 
 templ Table(lists []models.Document) {
 	<div class="overflow-x-auto w-full" id="table-container">
@@ -44,71 +24,13 @@ templ Table(lists []models.Document) {
 						</tr>
 					default:
 						for _, list := range lists {
-							<tr id={ list.ID.String() } class={ fmt.Sprintf("bg-%s hover:outline-%s text-white", DocumentsColor(list), DocumentsColor(list)) }>
-								<td>{ list.Code }</td>
-								<td>{ list.Title }</td>
-								<td>
-									if list.Tags != nil {
-										{ *list.Tags }
-									} else {
-										-
-									}
-								</td>
-								<td>{ list.IssuedAt.Local().Format("2006-01-02") }</td>
-								<td>
-									if list.DueDate != nil {
-										{ list.DueDate.Local().Format("2006-01-02") }
-									} else {
-										-
-									}
-								</td>
-								<td>
-									<a href="#" class="btn btn-warning">
-										<svg
-											class="w-6 h-6 text-gray-800 dark:text-white"
-											aria-hidden="true"
-											xmlns="http://www.w3.org/2000/svg"
-											width="24"
-											height="24"
-											fill="none"
-											viewBox="0 0 24 24"
-										>
-											<path
-												stroke="currentColor"
-												stroke-linecap="round"
-												stroke-linejoin="round"
-												stroke-width="2"
-												d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
-											></path>
-										</svg>
-									</a>
-									<a href="#" class="btn btn-error">
-										<svg
-											class="w-6 h-6 text-gray-800 dark:text-white"
-											aria-hidden="true"
-											xmlns="http://www.w3.org/2000/svg"
-											width="24"
-											height="24"
-											fill="none"
-											viewBox="0 0 24 24"
-										>
-											<path
-												stroke="currentColor"
-												stroke-linecap="round"
-												stroke-linejoin="round"
-												stroke-width="2"
-												d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
-											></path>
-										</svg>
-									</a>
-								</td>
-							</tr>
+							@TableData(list)
 						}
 				}
 			</tbody>
 		</table>
 	</div>
-	<div class="max-w-36">
+	<div class="flex justify-start items-start max-w-36">
 		<table class="table table-xs">
 			<thead>
 				<tr>

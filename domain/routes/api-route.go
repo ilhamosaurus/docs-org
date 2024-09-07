@@ -11,6 +11,7 @@ func ApiRoutes(e *echo.Echo) {
 
 	api.POST("/login", handler.Login)
 	api.POST("/register", handler.Register)
+	api.POST("/logout", handler.Logout)
 
 	DocRoutes(api)
 }

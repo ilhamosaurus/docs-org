@@ -78,3 +78,16 @@ func Register(c echo.Context) error {
 	message := "User created successfully"
 	return util.Render(c, 201, components.Toast(&components.ToastProps{Error: nil, Message: &message}))
 }
+
+func Logout(c echo.Context) error {
+	cookie := new(http.Cookie)
+	cookie.Name = "Authorization"
+	cookie.Value = ""
+	cookie.Expires = time.Unix(0, 0)
+	cookie.Path = "/"
+	cookie.Secure = false
+	cookie.SameSite = http.SameSiteLaxMode
+	cookie.HttpOnly = true
+	c.SetCookie(cookie)
+	return c.Redirect(http.StatusFound, "/")
+}

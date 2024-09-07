@@ -1,0 +1,91 @@
+package components
+
+import (
+	"fmt"
+	"go-templ/infra/models"
+	"time"
+)
+
+func DocumentsColor(dueDate *time.Time) string {
+	if dueDate == nil {
+		return "inherit"
+	}
+	period := dueDate.Sub(time.Now())
+
+	switch {
+	case period.Abs().Hours() <= 24*30:
+		return "error"
+	case period.Abs().Hours() <= 24*90:
+		return "warning"
+	default:
+		return "inherit"
+	}
+}
+
+templ TableData(document models.Document) {
+	<tr id={ fmt.Sprintf("row-%s", document.ID.String()) } class={ fmt.Sprintf("bg-%s hover:outline-%s text-white", DocumentsColor(document.DueDate), DocumentsColor(document.DueDate)) }>
+		<td>{ document.Code } </td>
+		<td>{ document.Title } </td>
+		<td>
+			if document.Tags != nil {
+				{ *document.Tags }
+			} else {
+				-
+			}
+		</td>
+		<td>{ document.IssuedAt.Local().Format("2006-01-02") } </td>
+		<td>
+			if document.DueDate != nil {
+				{ document.DueDate.Local().Format("2006-01-02") }
+			} else {
+				-
+			}
+		</td>
+		<td>
+			<a hx-get={ fmt.Sprintf("/document/%s", document.ID.String()) } class="btn btn-warning">
+				<svg
+					class="w-6 h-6 text-gray-800 dark:text-white"
+					aria-hidden="true"
+					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					fill="none"
+					viewBox="0 0 24 24"
+				>
+					<path
+						stroke="currentColor"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
+					></path>
+				</svg>
+			</a>
+			<a
+				hx-delete={ fmt.Sprintf("/api/document/%s", document.ID.String()) }
+				hx-confirm="Are you sure?"
+				hx-target={ fmt.Sprintf("#row-%s", document.ID.String()) }
+				hx-swap="delete"
+				class="btn btn-error"
+			>
+				<svg
+					class="w-6 h-6 text-gray-800 dark:text-white"
+					aria-hidden="true"
+					xmlns="http://www.w3.org/2000/svg"
+					width="24"
+					height="24"
+					fill="none"
+					viewBox="0 0 24 24"
+				>
+					<path
+						stroke="currentColor"
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
+					></path>
+				</svg>
+			</a>
+		</td>
+	</tr>
+}

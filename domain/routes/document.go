@@ -34,4 +34,5 @@ func DocRoutes(e *echo.Group) {
 
 	docs.Use(echojwt.WithConfig(config))
 	docs.POST("", handler.CreateDocument)
+	docs.DELETE("/:id", handler.DeleteDocument)
 }
