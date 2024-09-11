@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"database/sql"
 	"errors"
 	"strconv"
 	"time"
@@ -55,12 +56,22 @@ func CreateDocument(c echo.Context) error {
 		}
 	}
 
+	dueDateNullTime := sql.NullTime{
+		Time:  time.Time{},
+		Valid: false,
+	}
+
+	if dueDate != nil {
+		dueDateNullTime.Time = *dueDate
+		dueDateNullTime.Valid = true
+	}
+
 	_, err = service.CreateDocument(models.Document{
 		Code:        code,
 		Title:       title,
 		Tags:        &tag,
 		IssuedAt:    issuedAt,
-		DueDate:     dueDate,
+		DueDate:     dueDateNullTime,
 		Description: &description,
 		UserID:      user.ID,
 	})
@@ -166,7 +177,7 @@ func EditDocument(c echo.Context) error {
 		Title:       title,
 		Tags:        &tag,
 		IssuedAt:    issuedAt,
-		DueDate:     dueDate,
+		DueDate:     sql.NullTime{Time: *dueDate, Valid: dueDate != nil},
 		Description: &description,
 		UserID:      user.ID,
 	})

@@ -23,7 +23,7 @@ func DocumentsColor(dueDate *time.Time) string {
 }
 
 templ TableData(document models.Document) {
-	<tr id={ fmt.Sprintf("row-%s", document.ID.String()) } class={ fmt.Sprintf("bg-%s hover:outline-%s text-white", DocumentsColor(document.DueDate), DocumentsColor(document.DueDate)) }>
+	<tr id={ fmt.Sprintf("row-%s", document.ID.String()) } class={ fmt.Sprintf("bg-%s hover:outline-%s text-white", DocumentsColor(&document.DueDate.Time), DocumentsColor(&document.DueDate.Time)) }>
 		<td>{ document.Code } </td>
 		<td>{ document.Title } </td>
 		<td>
@@ -35,8 +35,8 @@ templ TableData(document models.Document) {
 		</td>
 		<td>{ document.IssuedAt.Local().Format("2006-01-02") } </td>
 		<td>
-			if document.DueDate != nil {
-				{ document.DueDate.Local().Format("2006-01-02") }
+			if document.DueDate.Valid {
+				{ document.DueDate.Time.Format("2006-01-02") }
 			} else {
 				-
 			}

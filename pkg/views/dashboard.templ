@@ -27,13 +27,46 @@ templ Dashboard(result models.GetDocumentResponse, props *components.ToastProps)
 				<!-- Flex container for the button and search input -->
 				<div class="form-control flex flex-row justify-start items-center w-full px-4">
 					<!-- "Tambah Dokumen" button -->
-					<button hx-get="/document" hx-target="#table-container" hx-swap="outerHTML" class="m-4 btn btn-outline btn-info">Tambah Dokumen</button>
+					<button onclick="modal_dokumen.showModal()" class="m-4 btn btn-outline btn-info">Tambah Dokumen</button>
 					<!-- Search input -->
 					<input type="text" placeholder="Search" class="input input-bordered w-24 md:w-auto"/>
 				</div>
 				<div class="skeleton w-full h-12 bg-inherit"></div>
 				@components.Table(result.Data)
 			</div>
+			<div class="flex justify-start items-start max-w-36">
+				<table class="table table-xs">
+					<thead>
+						<tr>
+							<th>Legend</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="bg-error hover:outline-error text-white">Near Due Date/Expired</td>
+						</tr>
+						<tr>
+							<td class="bg-warning hover:outline-warning text-white">Almost Due Date</td>
+						</tr>
+						<tr>
+							<td class="bg-inherit hover:outline-inherit text-white">No Due Date/Long way from due date</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			@components.DocsForm()
 		</body>
+		<script type="text/javascript">
+		document.addEventListener('DOMContentLoaded', () => {
+        document.body.addEventListener('htmx:beforeSwap', function (evt) {
+          if (evt.detail.xhr.status >= 400 && evt.detail.xhr.status <= 500) {
+						console.log(evt.detail.xhr.status)
+						evt.detail.target = document.getElementById('notification')
+            evt.detail.shouldSwap = true;
+            evt.detail.isError = false;
+          }
+        });
+      });
+	</script>
 	</html>
 }

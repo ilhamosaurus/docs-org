@@ -21,8 +21,9 @@ This app is in an early stage, and collaboration and ideas are always welcome!
    Example `.env` content:
 
    ```bash
-   DATABASE_URL=postgres://user:password@localhost:5432/mydb
-   JWT_SECRET=my-secret
+   PORT=9090
+   DB_URI=user:password@tcp(host:port)/docs_orgs?charset=utf8mb4&parseTime=True&loc=Local
+   SECRET=my-secret
    ```
 
 2. **Install Go and Dependencies**:
